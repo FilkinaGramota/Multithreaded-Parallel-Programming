@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace MTPP
 {
@@ -19,6 +14,9 @@ namespace MTPP
 
         public Solver(Func<double, double> f, double left, double right, double eps)
         {
+            if (eps <= 0)
+                throw new ArgumentException("Precision must be greater then zero");
+
             Eps = eps;
             stack = new ConcurrentStack<Problem>();
             stack.Push(new Problem(f, left, right));
@@ -34,8 +32,8 @@ namespace MTPP
                 {
                     if (Math.Abs(problem.Square - problem.SquareSum) > Eps)
                     {
-                        stack.Push(new Problem(problem.F, problem.Left, problem.Middle));
-                        stack.Push(new Problem(problem.F, problem.Middle, problem.Right));
+                        stack.Push(new Problem(problem.Function, problem.Left, problem.Middle));
+                        stack.Push(new Problem(problem.Function, problem.Middle, problem.Right));
                     }
                     else
                     {

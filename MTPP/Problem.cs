@@ -1,18 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MTPP
 {
     class Problem
     {
-        public double Left { get; set; }
-        public double Right { get; set; }
-        public Func<double, double> F;
+        public double Left { get; private set; }
+        public double Right { get; private set; }
+        public Func<double, double> Function { get; private set; } // Ok, it's programming, not mathematics.
 
-        public Problem(Func<double,double> f, double left, double right)
+        public Problem(Func<double,double> function, double left, double right)
         {
-            F = f;
+            if (left >= right)
+                throw new ArgumentException("Left must be less then right.");
+            
+            Function = function;
             Left = left;
             Right = right;
         }
@@ -29,12 +30,12 @@ namespace MTPP
 
         public double Square
         {
-            get { return ((F(Left) + F(Right)) / 2) * Length; }
+            get { return ((Function(Left) + Function(Right)) / 2) * Length; }
         }
 
         public double SquareSum
         {
-            get { return ((F(Left) + 2 * F(Middle) + F(Right)) / 2) * Length / 2; }
+            get { return ((Function(Left) + 2 * Function(Middle) + Function(Right)) / 2) * Length / 2; }
         }
        
     }

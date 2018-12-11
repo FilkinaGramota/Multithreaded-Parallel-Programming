@@ -1,7 +1,4 @@
 ﻿using System;
-using  System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MTPP
 {
@@ -9,7 +6,7 @@ namespace MTPP
     {
         static void Main(string[] args)
         {
-            int n = 5;
+            int n = 4;
 
             double left = 0;
             double right1 = Math.PI;
@@ -19,23 +16,28 @@ namespace MTPP
 
             TaskCreator task = new TaskCreator(x => Math.Sin(x), left, right1);
             Console.WriteLine($"Answer is {task.Solving()}\n");
+            Console.ReadKey();
+            
+            task.Eps = eps;
+            Console.WriteLine($"Answer is {task.Solving()}\n");
+            Console.ReadKey();
 
-            task.ChangeCslculatePrecision(eps);
+            task.NumberOfTasks = n;
+            Console.WriteLine($"Answer is {task.Solving()}\n");
+            Console.ReadKey();
+
+            task.Function = x => Math.Cos(x);
             Console.WriteLine($"Answer is {task.Solving()}\n");
 
-            task.CgangeNumberOfTasks(n);
+            task.Right = right2;
             Console.WriteLine($"Answer is {task.Solving()}\n");
+            Console.ReadKey();
 
-            task.ChangeProblem(x => Math.Cos(x));
+            task.Left = 0;
+            task.Right = 3;
+            task.Function = x => (x*x);
             Console.WriteLine($"Answer is {task.Solving()}\n");
-
-            task.ChangeProblem(left, right2);
-            Console.WriteLine($"Answer is {task.Solving()}\n");
-
-            task.ChangeProblem(x => x, 0, 4);
-            Console.WriteLine($"Answer is {task.Solving()}\n");
-
-            Console.ReadLine();
+            Console.ReadKey();
         }
     }
 }

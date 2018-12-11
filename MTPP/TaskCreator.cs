@@ -1,93 +1,121 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
+using System.ComponentModel;
 
 namespace MTPP
 {
-    class TaskCreator
+    class TaskCreator : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private List<Task> tasks;
         private Solver Solver;
 
-        public double N { get; private set; }
-        public Func<double,double> Function { get; private set; }
-        public double Left { get; private set; }
-        public double Right { get; private set; }
-        public double Eps { get; private set; }
-
-        public TaskCreator(Func<double, double> f, double left, double right, double eps = 0.001, int n = 3)
+        private int numberOfTasks;
+        public int NumberOfTasks
         {
-            N = n;
-            Function = f;
+            get { return numberOfTasks; }
+            set
+            {
+                numberOfTasks = value;
+                OnPropertyChanged(nameof(NumberOfTasks));
+            }
+        }
+
+        private Func<double, double> function;
+        public Func<double,double> Function
+        {
+            get { return function; }
+            set
+            {
+                function = value;
+                OnPropertyChanged(nameof(Function));
+            }
+        }
+
+        private double left;
+        public double Left
+        {
+            get { return left; }
+            set
+            {
+                left = value;
+                OnPropertyChanged(nameof(Left));
+            }
+        }
+
+        private double right;
+        public double Right
+        {
+            get { return right; }
+            set
+            {
+                right = value;
+                OnPropertyChanged(nameof(Right));
+            }
+        }
+
+        private double eps;
+        public double Eps
+        {
+            get { return eps; }
+            set
+            {
+                eps = value;
+                OnPropertyChanged(nameof(Eps));
+            }
+        }
+
+        public TaskCreator(Func<double, double> function, double left, double right, double eps = 0.001, int numberOfTasks = 3)
+        {
+            NumberOfTasks = numberOfTasks;
+            Function = function;
             Left = left;
             Right = right;
             Eps = eps;
-            Solver = new Solver(f, left, right, eps);
-            tasks = new List<Task>(n);
+            Solver = new Solver(function, left, right, eps);
+            tasks = new List<Task>(numberOfTasks);
+
+            PropertyChanged += ProblemPropertyChangedHandler;
         }
 
         public double Solving()
         {
-            for (int i = 0; i < N; i++)
+            for (int i = 0; i < NumberOfTasks; i++)
             {
                 tasks.Add(Task.Factory.StartNew(Solver.Solve));
             }
 
             int indexOfTask = Task.WaitAny(tasks.ToArray());
-
+            
             while (!Solver.stack.IsEmpty)
             {
                 tasks.RemoveAt(indexOfTask);
-                tasks.Add(Task.Factory.StartNew(Solver.Solve));
+                if (tasks.Count == 0)
+                    tasks.Add(Task.Factory.StartNew(Solver.Solve));
                 indexOfTask = Task.WaitAny(tasks.ToArray());
             }
-
+            
             return Solver.Solving;
         }
 
-        public void ChangeCslculatePrecision(double eps)
+        private void OnPropertyChanged(string propertyName)
         {
-            Eps = eps;
-            tasks.Clear();
-            Solver = new Solver(Function, Left, Right, eps);
-            Console.WriteLine($"Changing calculate precision: {eps}\n");
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void CgangeNumberOfTasks(int n)
+        private void ProblemPropertyChangedHandler(object sender, PropertyChangedEventArgs eventArgs)
         {
-            N = n;
+            Console.WriteLine($"Something changed... {eventArgs.PropertyName.ToString()}\n");
             tasks.Clear();
-            tasks = new List<Task>(n);
+
+            if (eventArgs.PropertyName.Equals(nameof(NumberOfTasks)))
+                tasks = new List<Task>(NumberOfTasks);
+
             Solver = new Solver(Function, Left, Right, Eps);
-            Console.WriteLine($"Changing number of tasks: {n}\n");
-        }
-
-        public void ChangeProblem(Func<double,double> f, double left, double right)
-        {
-            Function = f;
-            Left = left;
-            Right = right;
-            tasks.Clear();
-            Solver = new Solver(f, left, right, Eps);
-            Console.WriteLine($"Changing problem (new function & new interval)\n");
-        }
-
-        public void ChangeProblem(Func<double, double> f)
-        {
-            Function = f;
-            tasks.Clear();
-            Solver = new Solver(f, Left, Right, Eps);
-            Console.WriteLine($"Changing problem (new function)\n");
-        }
-
-        public void ChangeProblem(double left, double right)
-        {
-            Left = left;
-            Right = right;
-            tasks.Clear();
-            Solver = new Solver(Function, left, right, Eps);
-            Console.WriteLine($"Changing problem (new interval)\n");
         }
     }
 }
