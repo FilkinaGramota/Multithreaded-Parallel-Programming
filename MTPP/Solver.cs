@@ -15,7 +15,7 @@ namespace MTPP
         public Solver(Func<double, double> f, double left, double right, double eps)
         {
             if (eps <= 0)
-                throw new ArgumentException("Precision must be greater then zero");
+                throw new ArgumentException("Precision must be greater then zero", nameof(Eps));
 
             Eps = eps;
             stack = new ConcurrentStack<Problem>();

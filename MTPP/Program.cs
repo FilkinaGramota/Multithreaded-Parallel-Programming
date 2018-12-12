@@ -14,29 +14,30 @@ namespace MTPP
 
             double eps = 0.0001;
 
-            TaskCreator task = new TaskCreator(x => Math.Sin(x), left, right1);
-            Console.WriteLine($"Answer is {task.Solving()}\n");
-            Console.ReadKey();
-            
-            task.Eps = eps;
-            Console.WriteLine($"Answer is {task.Solving()}\n");
+            TaskCreator taskCreator = new TaskCreator(x => Math.Sin(x), left, right1);
+            Console.WriteLine($"Answer is {taskCreator.Solving()}\n");
             Console.ReadKey();
 
-            task.NumberOfTasks = n;
-            Console.WriteLine($"Answer is {task.Solving()}\n");
+            taskCreator.Eps = eps;
+            Console.WriteLine($"Answer is {taskCreator.Solving()}\n");
             Console.ReadKey();
 
-            task.Function = x => Math.Cos(x);
-            Console.WriteLine($"Answer is {task.Solving()}\n");
-
-            task.Right = right2;
-            Console.WriteLine($"Answer is {task.Solving()}\n");
+            taskCreator.NumberOfTasks = n;
+            Console.WriteLine($"Answer is {taskCreator.Solving()}\n");
             Console.ReadKey();
 
-            task.Left = 0;
-            task.Right = 3;
-            task.Function = x => (x*x);
-            Console.WriteLine($"Answer is {task.Solving()}\n");
+            taskCreator.Function = x => Math.Cos(x);
+            Console.WriteLine($"Answer is {taskCreator.Solving()}\n");
+            Console.ReadKey();
+
+            taskCreator.Right = right2;
+            Console.WriteLine($"Answer is {taskCreator.Solving()}\n");
+            Console.ReadKey();
+
+            taskCreator.Left = 0;
+            taskCreator.Right = 3;
+            taskCreator.Function = x => (x*x);
+            Console.WriteLine($"Answer is {taskCreator.Solving()}\n");
             Console.ReadKey();
         }
     }

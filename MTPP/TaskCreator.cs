@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Diagnostics;
 using System.ComponentModel;
 
 namespace MTPP
@@ -109,7 +108,7 @@ namespace MTPP
 
         private void ProblemPropertyChangedHandler(object sender, PropertyChangedEventArgs eventArgs)
         {
-            Console.WriteLine($"Something changed... {eventArgs.PropertyName.ToString()}\n");
+            Console.WriteLine($"Something changed... {eventArgs.PropertyName}\n");
             tasks.Clear();
 
             if (eventArgs.PropertyName.Equals(nameof(NumberOfTasks)))
