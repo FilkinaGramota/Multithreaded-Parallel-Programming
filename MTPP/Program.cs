@@ -44,9 +44,9 @@ namespace MTPP
 
             ProblemSolving(x => Math.Sin(x), left, right1, eps);
 
-            ProblemSolving(x => Math.Sin(x), left, right2, eps);
+            ProblemSolving(x => Math.Cos(x), left, right2, eps);
 
-            ProblemSolving(x => Math.Pow(x, 0.5), 0, 5, eps);
+            ProblemSolving(x => Math.Exp(x), 0, 3, eps);
         }
     }
 }
