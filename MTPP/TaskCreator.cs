@@ -8,7 +8,7 @@ namespace MTPP
     class TaskCreator : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-
+        
         private List<Task> tasks;
         private Solver Solver;
 
@@ -19,7 +19,7 @@ namespace MTPP
             set
             {
                 numberOfTasks = value;
-                OnPropertyChanged(nameof(NumberOfTasks));
+                //OnPropertyChanged(nameof(NumberOfTasks));
             }
         }
 
@@ -30,7 +30,7 @@ namespace MTPP
             set
             {
                 function = value;
-                OnPropertyChanged(nameof(Function));
+                //OnPropertyChanged(nameof(Function));
             }
         }
 
@@ -41,7 +41,7 @@ namespace MTPP
             set
             {
                 left = value;
-                OnPropertyChanged(nameof(Left));
+                //OnPropertyChanged(nameof(Left));
             }
         }
 
@@ -52,7 +52,7 @@ namespace MTPP
             set
             {
                 right = value;
-                OnPropertyChanged(nameof(Right));
+                //OnPropertyChanged(nameof(Right));
             }
         }
 
@@ -63,7 +63,7 @@ namespace MTPP
             set
             {
                 eps = value;
-                OnPropertyChanged(nameof(Eps));
+                //OnPropertyChanged(nameof(Eps));
             }
         }
 
@@ -77,7 +77,7 @@ namespace MTPP
             Solver = new Solver(function, left, right, eps);
             tasks = new List<Task>(numberOfTasks);
 
-            PropertyChanged += ProblemPropertyChangedHandler;
+            //PropertyChanged += ProblemPropertyChangedHandler;
         }
 
         public double Solving()
@@ -89,7 +89,7 @@ namespace MTPP
 
             int indexOfTask = Task.WaitAny(tasks.ToArray());
             
-            while (!Solver.stack.IsEmpty)
+            while (!Solver.Stack.IsEmpty)
             {
                 tasks.RemoveAt(indexOfTask);
                 if (tasks.Count == 0)
@@ -100,13 +100,20 @@ namespace MTPP
             return Solver.Solving;
         }
 
-        private void OnPropertyChanged(string propertyName)
+        public void OnNext()
+        {
+            tasks.Clear();
+            tasks = new List<Task>(NumberOfTasks);
+            Solver = new Solver(Function, Left, Right, Eps);
+        }
+
+        /*private void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
+        }*/
 
-        private void ProblemPropertyChangedHandler(object sender, PropertyChangedEventArgs eventArgs)
+        /*private void ProblemPropertyChangedHandler(object sender, PropertyChangedEventArgs eventArgs)
         {
             Console.WriteLine($"Something changed... {eventArgs.PropertyName}\n");
             tasks.Clear();
@@ -115,6 +122,6 @@ namespace MTPP
                 tasks = new List<Task>(NumberOfTasks);
 
             Solver = new Solver(Function, Left, Right, Eps);
-        }
+        }*/
     }
 }
